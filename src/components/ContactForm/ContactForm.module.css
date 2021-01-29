@@ -1,0 +1,22 @@
+form {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 24px;
+  width: max-content;
+
+  border-radius: 6px;
+  border: 1px solid black;
+}
+
+label,
+input {
+  display: block;
+}
+
+input {
+  height: 36px;
+}
+
+label:not(:last-child) {
+  margin-bottom: 24px;
+}

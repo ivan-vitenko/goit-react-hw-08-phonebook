@@ -1,0 +1,7 @@
+ul {
+  margin-bottom: 0;
+}
+
+li:not(:last-child) {
+  margin-bottom: 12px;
+}
