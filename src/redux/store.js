@@ -1,4 +1,4 @@
-import { createStore } from 'redux';
+// import { createStore } from 'redux';
 
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 
@@ -16,8 +16,9 @@ import {
 } from 'redux-persist';
 
 import storage from 'redux-persist/lib/storage';
-import { composeWithDevTools } from 'redux-devtools-extension';
+// import { composeWithDevTools } from 'redux-devtools-extension';
 import contactsReducer from './contacts/contacts-reducer';
+import { authReducer } from './auth';
 
 const middleware = [
   ...getDefaultMiddleware({
@@ -29,8 +30,15 @@ const middleware = [
   logger,
 ];
 
+const authPersistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['token'],
+};
+
 const store = configureStore({
   reducer: {
+    auth: persistReducer(authPersistConfig, authReducer),
     contacts: contactsReducer,
   },
 
@@ -39,7 +47,6 @@ const store = configureStore({
   devTools: process.env.NODE_ENV === 'development',
 });
 
-// const persistor = persistStore(store);
+const persistor = persistStore(store);
 
-export default store;
-// { store, persistor };
+export default { store, persistor };

@@ -1,35 +1,59 @@
 import { connect } from 'react-redux';
-import { useEffect } from 'react';
-import ContactForm from './components/ContactForm/ContactForm';
-import Filter from './components/Filter/Filter';
-import ContactList from './components/ContactList/ContactList';
+import { useEffect, Component } from 'react';
 
-// import contactsOperations from './redux/contacts/contacts-operations';
-// import contactsSelectors from './redux/contacts/contacts-selectors';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
+import AppBar from './components/AppBar';
+import ContactsView from './views/ContactsView';
+import RegisterView from './views/RegisterView';
+import LoginView from './views/LoginView';
+
+import { authOperations } from './redux/auth';
 import { contactsOperations, contactsSelectors } from './redux/contacts';
 
 import './App.css';
 
-function App({ fetchContacts, isLoadingContact }) {
+class App extends Component {
+  componentDidMount() {
+    this.props.onGetCurrentUser();
+  }
+
+  render() {
+    return (
+      <BrowserRouter>
+        <div className="container">
+          <AppBar />
+
+          <Switch>
+            <Route exact path="/" component={ContactsView} />
+            <Route exact path="/contacts" component={ContactsView} />
+            <Route exact path="/register" component={RegisterView} />
+            <Route exact path="/login" component={LoginView} />
+          </Switch>
+        </div>
+      </BrowserRouter>
+    );
+  }
+}
+
+function App1({ fetchContacts, isLoadingContact }) {
   useEffect(() => {
     fetchContacts();
   }, []);
 
   return (
-    <div className="container">
-      <h2>Phonebook</h2>
-      <ContactForm />
+    <BrowserRouter>
+      <div className="container">
+        <AppBar />
 
-      <h2>Contacts</h2>
-      {isLoadingContact && <h3>Завантажуємо...</h3>}
-      {!isLoadingContact && (
-        <div className="contacts">
-          <Filter />
-          <ContactList />
-        </div>
-      )}
-    </div>
+        <Switch>
+          <Route exact path="/" component={ContactsView} />
+          <Route exact path="/contacts" component={ContactsView} />
+          <Route exact path="/register" component={RegisterView} />
+          <Route exact path="/login" component={LoginView} />
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
 
@@ -37,8 +61,12 @@ const mapStateToProps = state => ({
   isLoadingContact: contactsSelectors.getLoading(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  fetchContacts: () => dispatch(contactsOperations.fetchContacts()),
-});
+// const mapDispatchToProps = dispatch => ({
+// fetchContacts: () => dispatch(contactsOperations.fetchContacts()),
+// });
+
+const mapDispatchToProps = {
+  onGetCurrentUser: authOperations.getCurrentUser,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

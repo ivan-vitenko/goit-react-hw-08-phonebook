@@ -12,7 +12,7 @@ import {
   deleteContactError,
 } from './contacts-actions';
 
-axios.defaults.baseURL = 'http://localhost:4040/';
+// axios.defaults.baseURL = 'http://localhost:4040/';
 
 const fetchContacts = () => async dispatch => {
   dispatch(fetchContactRequest());
@@ -24,9 +24,11 @@ const fetchContacts = () => async dispatch => {
 
   try {
     const { data } = await axios.get('/contacts');
+
+    console.log(data);
     dispatch(fetchContactSuccess(data));
   } catch (error) {
-    dispatch(fetchContactError(error));
+    dispatch(fetchContactError(error.message));
   }
 };
 
